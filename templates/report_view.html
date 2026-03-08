@@ -1,0 +1,487 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* ── Report View: Editorial Layout ── */
+    .report-page {
+        background: #fafaf9;
+        min-height: 100vh;
+        padding: 0;
+    }
+
+    .report-top-bar {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 32px 32px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .report-nav-links {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .report-nav-link {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #78716c;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.2s;
+    }
+
+    .report-nav-link:hover {
+        color: #1d4ed8;
+    }
+
+    .report-nav-link svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .report-nav-separator {
+        color: #d6d3d1;
+        font-size: 0.75rem;
+    }
+
+    .report-pdf-btn {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #1d4ed8;
+        background: rgba(29, 78, 216, 0.06);
+        border: 1px solid rgba(29, 78, 216, 0.15);
+        border-radius: 6px;
+        padding: 8px 16px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .report-pdf-btn:hover {
+        background: rgba(29, 78, 216, 0.1);
+        border-color: rgba(29, 78, 216, 0.3);
+    }
+
+    .report-pdf-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* ── Report Header ── */
+    .report-header {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 40px 32px 32px;
+        border-bottom: 2px solid #1d4ed8;
+    }
+
+    .report-header h1 {
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1c1917;
+        letter-spacing: -0.02em;
+        line-height: 1.25;
+        margin: 0 0 16px;
+    }
+
+    .report-meta {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .report-meta-date {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.8rem;
+        color: #78716c;
+    }
+
+    .report-meta-vertical {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 3px 10px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .report-meta-vertical.aerospace {
+        color: #2563eb;
+        background: rgba(37, 99, 235, 0.08);
+    }
+    .report-meta-vertical.automotive {
+        color: #0e7490;
+        background: rgba(14, 116, 144, 0.08);
+    }
+    .report-meta-vertical.robotics {
+        color: #ea580c;
+        background: rgba(234, 88, 12, 0.08);
+    }
+    .report-meta-vertical.ai-electronics {
+        color: #0d9488;
+        background: rgba(13, 148, 136, 0.08);
+    }
+
+    /* ── Report Body ── */
+    .report-body {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 40px 32px 60px;
+    }
+
+    /* ── Report Content: Editorial Typography ── */
+    .report-content h3 {
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #1c1917;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #1d4ed8;
+        line-height: 1.35;
+    }
+
+    .report-content h3:first-child {
+        margin-top: 0;
+    }
+
+    .report-content p {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: #44403c;
+        line-height: 1.8;
+        margin-bottom: 1.1rem;
+    }
+
+    .report-content p:last-child {
+        margin-bottom: 0;
+    }
+
+    .report-content ul {
+        margin: 1rem 0;
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .report-content li {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: #44403c;
+        line-height: 1.75;
+        margin-bottom: 0.85rem;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .report-content li::before {
+        content: "\2022";
+        position: absolute;
+        left: 0.25rem;
+        color: #1d4ed8;
+        font-size: 1.1em;
+        line-height: 1.75;
+    }
+
+    .report-content li:last-child {
+        margin-bottom: 0;
+    }
+
+    .report-content strong {
+        color: #1c1917;
+        font-weight: 600;
+    }
+
+    .report-content em {
+        color: #78716c;
+        font-style: italic;
+    }
+
+    .report-content a {
+        color: #1d4ed8;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(29, 78, 216, 0.3);
+        transition: border-color 0.2s;
+    }
+
+    .report-content a:hover {
+        border-bottom-color: #1d4ed8;
+    }
+
+    .report-content hr {
+        border: none;
+        border-top: 1px solid #d6d3d1;
+        margin: 2.5rem 0;
+    }
+
+    /* ── Report Footer ── */
+    .report-footer {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 24px 32px 60px;
+        text-align: center;
+        border-top: 1px solid #e7e5e4;
+    }
+
+    .report-footer p {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.75rem;
+        color: #a8a29e;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+        .report-top-bar {
+            padding: 20px 20px 0;
+        }
+        .report-header {
+            padding: 28px 20px 24px;
+        }
+        .report-header h1 {
+            font-size: 1.5rem;
+        }
+        .report-body {
+            padding: 28px 20px 40px;
+        }
+        .report-footer {
+            padding: 20px 20px 80px;
+        }
+        .report-content h3 {
+            font-size: 1.1rem;
+            margin-top: 2rem;
+        }
+    }
+
+    /* ── Print Styles ── */
+    @media print {
+        /* Hide ALL non-report elements */
+        body > nav,
+        body > div[id="mobileMenu"],
+        body > div[id="installBanner"],
+        body > nav:last-of-type,
+        .report-top-bar,
+        script {
+            display: none !important;
+        }
+
+        /* Reset body for clean print */
+        body {
+            background: #fff !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .report-page {
+            background: #fff !important;
+            min-height: auto;
+            padding: 0;
+        }
+
+        /* Expand content area */
+        .report-header,
+        .report-body,
+        .report-footer {
+            max-width: none;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        /* Report header: clean, professional */
+        .report-header {
+            border-bottom: 2px solid #000;
+            padding-top: 0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .report-header h1 {
+            font-size: 22pt;
+            color: #000;
+        }
+
+        .report-meta-date {
+            font-size: 10pt;
+            color: #555;
+        }
+
+        .report-meta-vertical {
+            font-size: 9pt;
+            border: 1px solid #ccc;
+            background: transparent !important;
+            color: #333 !important;
+        }
+
+        /* Content typography */
+        .report-content h3 {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 15pt;
+            font-weight: 700;
+            color: #000;
+            margin-top: 28pt;
+            margin-bottom: 10pt;
+            padding-bottom: 6pt;
+            border-bottom: 1.5pt solid #000;
+            page-break-after: avoid;
+        }
+
+        .report-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .report-content p {
+            font-family: 'Inter', Georgia, serif;
+            font-size: 10.5pt;
+            color: #222;
+            line-height: 1.65;
+            margin-bottom: 10pt;
+            orphans: 3;
+            widows: 3;
+        }
+
+        .report-content ul {
+            margin: 8pt 0;
+            padding-left: 0;
+        }
+
+        .report-content li {
+            font-family: 'Inter', Georgia, serif;
+            font-size: 10.5pt;
+            color: #222;
+            line-height: 1.6;
+            margin-bottom: 8pt;
+            padding-left: 16pt;
+            page-break-inside: avoid;
+        }
+
+        .report-content li::before {
+            color: #000;
+            font-size: 10pt;
+        }
+
+        .report-content strong {
+            color: #000;
+            font-weight: 700;
+        }
+
+        .report-content em {
+            color: #555;
+        }
+
+        /* Links: show URL in print */
+        .report-content a {
+            color: #1a0dab;
+            border-bottom: none;
+            text-decoration: underline;
+        }
+
+        .report-content a[href^="http"]::after {
+            content: " (" attr(href) ")";
+            font-size: 8pt;
+            color: #1a0dab;
+            word-break: break-all;
+        }
+
+        /* Prevent long URLs from breaking in sources list */
+        .report-content a[href^="http"] {
+            word-break: break-all;
+        }
+
+        .report-content hr {
+            border-top: 1px solid #999;
+            margin: 24pt 0;
+        }
+
+        /* Footer */
+        .report-footer {
+            border-top: 1px solid #ccc;
+            padding-top: 16pt;
+            margin-top: 40pt;
+        }
+
+        .report-footer p {
+            font-size: 8pt;
+            color: #888;
+        }
+
+        /* Page settings */
+        @page {
+            margin: 2.5cm 2cm;
+            size: A4;
+        }
+
+        @page :first {
+            margin-top: 2cm;
+        }
+    }
+</style>
+
+<div class="report-page">
+    <!-- Top Bar: Navigation + PDF -->
+    <div class="report-top-bar">
+        <div class="report-nav-links">
+            <a href="/archive" class="report-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Archive
+            </a>
+            <span class="report-nav-separator">|</span>
+            <a href="/dashboard" class="report-nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                Dashboard
+            </a>
+        </div>
+        <button onclick="window.print()" class="report-pdf-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9V2h12v7"/>
+                <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+                <rect x="6" y="14" width="12" height="8"/>
+            </svg>
+            Save as PDF
+        </button>
+    </div>
+
+    <!-- Report Header -->
+    <div class="report-header">
+        <h1>{{ vertical_display }} Intelligence Report</h1>
+        <div class="report-meta">
+            <span class="report-meta-date">{{ report.created_at[:10] }}</span>
+            <span class="report-meta-vertical {{ vertical_class }}">{{ vertical_display }}</span>
+        </div>
+    </div>
+
+    <!-- Report Body -->
+    <div class="report-body">
+        <div class="report-content">
+            {{ report_html | safe }}
+        </div>
+    </div>
+
+    <!-- Report Footer -->
+    <div class="report-footer">
+        <p>Nyriom Technologies GmbH &mdash; Market Intelligence Division<br>
+        Generated by AI analysis &middot; Confidential</p>
+    </div>
+</div>
+{% endblock %}

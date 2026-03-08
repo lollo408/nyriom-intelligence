@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Nyriom Intelligence{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto px-4 sm:px-6 py-10 pb-24">
+    {% if not authenticated %}
+    <div class="text-center mb-8">
+        <h1 class="font-serif text-2xl text-stone-900 mb-1">Admin Login</h1>
+        <p class="text-stone-500 text-sm">Access admin controls</p>
+    </div>
+    {% if login_error %}
+    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm font-medium">{{ login_error }}</div>
+    {% endif %}
+    <div class="bg-white border border-stone-200 rounded-lg p-6">
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="login">
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-stone-900 mb-2">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter admin password" required autofocus
+                    class="w-full px-4 py-3 border border-stone-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700">
+            </div>
+            <button type="submit" class="w-full py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors text-sm">Login</button>
+        </form>
+    </div>
+    {% else %}
+    <div class="text-center mb-8">
+        <h1 class="font-serif text-2xl text-stone-900 mb-1">Admin Panel</h1>
+        <p class="text-stone-500 text-sm">Manage events and generate AI summaries</p>
+    </div>
+
+    <div id="statusMsg" class="hidden px-4 py-3 rounded-lg mb-4 text-sm font-medium"></div>
+
+    <div class="bg-white border border-stone-200 rounded-lg p-6 mb-4">
+        <h2 class="text-base font-semibold text-stone-900 mb-1">Generate Event Summaries</h2>
+        <p class="text-stone-500 text-xs mb-4">Past events without AI-generated intelligence briefs</p>
+        {% if events_without_summaries %}
+        <div class="space-y-2">
+            {% for ev in events_without_summaries %}
+            <div class="flex justify-between items-center p-3 bg-stone-50 border border-stone-200 rounded-lg gap-3" id="event-{{ ev.id }}">
+                <div class="flex-1 min-w-0">
+                    <div class="font-medium text-stone-900 text-sm truncate">{{ ev.name }}</div>
+                    <div class="text-xs text-stone-400">{{ ev.industry or 'General' }} &middot; {{ ev.end_date or ev.start_date }}</div>
+                </div>
+                <button class="btn-generate px-3 py-1.5 bg-blue-700 text-white text-xs font-semibold rounded-lg hover:bg-blue-800 transition-colors whitespace-nowrap" onclick="generateSummary('{{ ev.id }}', this)">Generate</button>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="w-full mt-4 py-2.5 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors text-sm" onclick="generateAll()">Generate All Missing Summaries</button>
+        {% else %}
+        <div class="text-center py-6 text-stone-400 text-sm">All past events have summaries.</div>
+        {% endif %}
+    </div>
+
+    <div class="bg-white border border-stone-200 rounded-lg p-6 mb-4">
+        <h2 class="text-base font-semibold text-stone-900 mb-3">Quick Links</h2>
+        <div class="grid grid-cols-2 gap-2">
+            <a href="/" class="flex items-center justify-center py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-stone-600 text-sm font-medium hover:border-blue-700 hover:text-blue-700 transition-colors">Home</a>
+            <a href="/dashboard" class="flex items-center justify-center py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-stone-600 text-sm font-medium hover:border-blue-700 hover:text-blue-700 transition-colors">Dashboard</a>
+            <a href="/upload-events" class="flex items-center justify-center py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-stone-600 text-sm font-medium hover:border-blue-700 hover:text-blue-700 transition-colors">Upload Events</a>
+            <a href="/events" class="flex items-center justify-center py-2.5 bg-stone-50 border border-stone-200 rounded-lg text-stone-600 text-sm font-medium hover:border-blue-700 hover:text-blue-700 transition-colors">Events</a>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a href="/admin/logout" class="inline-block text-sm text-stone-400 hover:text-red-500 border border-stone-200 hover:border-red-300 rounded-lg px-4 py-2 transition-colors">Logout</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+async function generateSummary(eventId, btn) {
+    btn.disabled = true;
+    btn.textContent = 'Working...';
+    const statusEl = document.getElementById('statusMsg');
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const resp = await fetch('/api/generate-summary', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrfToken},
+            body: JSON.stringify({event_id: eventId})
+        });
+        const data = await resp.json();
+        if (data.success) {
+            btn.textContent = 'Done';
+            btn.className = 'px-3 py-1.5 bg-green-700 text-white text-xs font-semibold rounded-lg whitespace-nowrap';
+            statusEl.textContent = 'Summary generated for: ' + (data.event_name || eventId);
+            statusEl.className = 'bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-4 text-sm font-medium';
+        } else {
+            btn.textContent = 'Failed';
+            btn.className = 'px-3 py-1.5 bg-red-600 text-white text-xs font-semibold rounded-lg whitespace-nowrap';
+            btn.disabled = false;
+            statusEl.textContent = 'Error: ' + (data.error || 'Unknown');
+            statusEl.className = 'bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm font-medium';
+        }
+    } catch (e) {
+        btn.textContent = 'Error';
+        btn.className = 'px-3 py-1.5 bg-red-600 text-white text-xs font-semibold rounded-lg whitespace-nowrap';
+        btn.disabled = false;
+        statusEl.textContent = 'Network error: ' + e.message;
+        statusEl.className = 'bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm font-medium';
+    }
+}
+async function generateAll() {
+    const buttons = document.querySelectorAll('.btn-generate:not(:disabled)');
+    for (const btn of buttons) {
+        const eventId = btn.closest('[id^="event-"]').id.replace('event-', '');
+        await generateSummary(eventId, btn);
+        await new Promise(r => setTimeout(r, 2000));
+    }
+}
+</script>
+{% endblock %}

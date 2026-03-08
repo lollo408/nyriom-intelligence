@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 pb-24">
+    <!-- Back Link -->
+    <a href="/events" class="text-stone-400 text-sm hover:text-stone-900 transition-colors inline-flex items-center gap-1 mb-8">
+        &larr; back to events
+    </a>
+
+    <!-- Header -->
+    <h1 class="font-serif text-2xl sm:text-3xl text-stone-900 mb-4">{{ event.name }}</h1>
+
+    <!-- Tags -->
+    <div class="flex gap-3 flex-wrap items-center mb-8">
+        {% if event.industry %}
+        <span class="text-xs rounded-full px-2.5 py-0.5"
+            style="background: {{ '#eff6ff' if event.industry == 'Aerospace' else ('#ecfeff' if event.industry == 'Automotive' else ('#fff7ed' if event.industry == 'Robotics' else '#f0fdfa')) }};
+                   color: {{ '#2563eb' if event.industry == 'Aerospace' else ('#0e7490' if event.industry == 'Automotive' else ('#ea580c' if event.industry == 'Robotics' else '#0d9488')) }};">
+            {{ event.industry }}
+        </span>
+        {% endif %}
+        {% if event.start_date >= (now().strftime('%Y-%m-%d') if now is defined else '') %}
+        <span class="text-xs rounded-full px-2.5 py-0.5 bg-green-50 text-green-800 border border-green-200">upcoming</span>
+        {% else %}
+        <span class="text-xs rounded-full px-2.5 py-0.5 bg-stone-100 text-stone-500">past</span>
+        {% endif %}
+    </div>
+
+    <!-- Info Card -->
+    <div class="bg-white border border-stone-200 rounded-lg p-4 sm:p-6 mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div>
+                <div class="text-stone-400 text-xs uppercase tracking-wide mb-1">Dates</div>
+                <div class="text-stone-900 text-sm">{{ event.start_date }}{% if event.end_date %} &rarr; {{ event.end_date }}{% endif %}</div>
+            </div>
+
+            {% if event.location %}
+            <div>
+                <div class="text-stone-400 text-xs uppercase tracking-wide mb-1">Location</div>
+                <div class="text-stone-900 text-sm">{{ event.location }}{% if event.country %}, {{ event.country }}{% endif %}</div>
+            </div>
+            {% endif %}
+
+            {% if event.website %}
+            <div>
+                <div class="text-stone-400 text-xs uppercase tracking-wide mb-1">Website</div>
+                <div class="text-sm">
+                    <a href="{{ event.website }}" target="_blank" class="text-blue-700 hover:underline">{{ event.website }} &rarr;</a>
+                </div>
+            </div>
+            {% endif %}
+
+            <div>
+                <div class="text-stone-400 text-xs uppercase tracking-wide mb-1">Added</div>
+                <div class="text-stone-900 text-sm">{{ event.created_at[:10] }}</div>
+            </div>
+        </div>
+
+        {% if event.description %}
+        <div class="mt-6 pt-6 border-t border-stone-100">
+            <div class="text-stone-400 text-xs uppercase tracking-wide mb-2">Description</div>
+            <p class="text-stone-600 text-sm leading-relaxed">{{ event.description }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- AI Summary -->
+    {% if summary %}
+    <div class="bg-white border border-stone-200 rounded-lg p-4 sm:p-6 border-l-4 border-l-blue-700">
+        <div class="flex justify-between items-center mb-5">
+            <h2 class="font-serif text-lg text-stone-900">Event Summary</h2>
+            <span class="bg-blue-50 text-blue-700 text-xs rounded-full px-2 py-0.5 font-medium">AI-generated</span>
+        </div>
+        <div class="text-stone-700 text-sm leading-relaxed prose prose-sm prose-stone max-w-none
+                    prose-headings:font-serif prose-headings:text-stone-900
+                    prose-a:text-blue-700 prose-a:no-underline hover:prose-a:underline
+                    prose-strong:text-stone-900
+                    prose-hr:border-stone-200">
+            {{ summary.summary_text | safe }}
+        </div>
+        <div class="text-stone-400 text-xs mt-5 pt-4 border-t border-stone-100">
+            Generated {{ summary.generated_at[:10] }}
+        </div>
+    </div>
+    {% elif is_past_event %}
+    <div class="bg-white border border-stone-200 rounded-lg p-4 sm:p-6 border-l-4 border-l-blue-700">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-serif text-lg text-stone-900">Event Summary</h2>
+            <span class="bg-blue-50 text-blue-700 text-xs rounded-full px-2 py-0.5 font-medium">AI-generated</span>
+        </div>
+        <p class="text-stone-400 text-sm italic text-center py-6">Summary will be generated 7 days after the event ends.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

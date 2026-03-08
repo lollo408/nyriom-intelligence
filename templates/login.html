@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Nyriom Intelligence</title>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Georgia', 'Times New Roman', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#fafaf9">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Nyriom Intelligence">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+    <meta name="description" content="Market Intelligence Dashboard for Nyriom Technologies">
+</head>
+<body class="bg-stone-50 min-h-screen flex items-center justify-center font-sans antialiased p-4">
+    <div class="max-w-sm w-full text-center">
+        <h1 class="font-serif text-2xl font-bold text-stone-900 mb-1">Nyriom Intelligence</h1>
+        <p class="text-stone-500 text-sm mb-8">Market Intelligence Dashboard</p>
+
+        {% if logged_out %}
+        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6 text-sm">
+            You've been signed out successfully.
+        </div>
+        {% endif %}
+        {% if error %}
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="bg-white border border-stone-200 rounded-lg p-8">
+            <div class="mb-6">
+                <div class="text-xs text-stone-400 uppercase tracking-wide mb-3">Team access</div>
+                <form action="/auth/demo" method="POST" class="flex flex-col gap-3">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="password" name="password" placeholder="Enter password" required
+                        class="w-full px-4 py-3 border border-stone-300 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700 transition-colors">
+                    <button type="submit"
+                        class="w-full py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors text-sm">
+                        Sign In
+                    </button>
+                </form>
+            </div>
+
+            <div class="flex items-center gap-3 text-stone-400 text-xs my-6">
+                <span class="flex-1 h-px bg-stone-200"></span>
+                <span>or</span>
+                <span class="flex-1 h-px bg-stone-200"></span>
+            </div>
+
+            <a href="/guest"
+                class="block w-full py-3 text-stone-500 hover:text-stone-900 border border-stone-200 rounded-lg text-sm font-medium transition-colors hover:border-stone-300 text-center">
+                Continue as Guest
+            </a>
+        </div>
+
+        <p class="mt-8 text-stone-400 text-xs">Nyriom Technologies GmbH</p>
+    </div>
+</body>
+</html>

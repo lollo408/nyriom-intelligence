@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 py-10 pb-24">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-serif text-2xl text-stone-900">Intelligence Archive</h1>
+        <p class="text-stone-500 text-sm mt-1">Search historical reports</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex flex-col sm:flex-row gap-4 mb-8">
+        <!-- Vertical Dropdown -->
+        <div class="flex-1 min-w-[150px] relative" id="archiveVerticalContainer">
+            <label class="block text-xs text-stone-400 uppercase tracking-wide mb-1.5">Vertical</label>
+            <button type="button" id="archiveVerticalBtn" onclick="toggleArchiveVertical()"
+                aria-haspopup="listbox" aria-expanded="false" aria-label="Filter by vertical"
+                class="w-full flex items-center justify-between gap-2 bg-white border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm text-stone-700 hover:border-stone-300 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700 transition-colors text-left">
+                <span class="flex items-center gap-2.5">
+                    <span class="w-2 h-2 rounded-full flex-shrink-0" id="archiveVerticalDot"
+                        style="background: {{ '#2563eb' if current_vertical == 'Aerospace' else ('#0e7490' if current_vertical == 'Automotive' else ('#ea580c' if current_vertical == 'Robotics' else ('#0d9488' if current_vertical == 'AI/Electronics' else '#a8a29e'))) }};"></span>
+                    <span id="archiveVerticalLabel">{{ 'All Verticals' if current_vertical == 'all' else ('AI / Electronics' if current_vertical == 'AI/Electronics' else current_vertical) }}</span>
+                </span>
+                <svg class="w-4 h-4 text-stone-400 flex-shrink-0 transition-transform" id="archiveVerticalChevron" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+            <div id="archiveVerticalPanel" role="listbox" class="hidden absolute left-0 top-full mt-1.5 w-full bg-white border border-stone-200 rounded-lg shadow-lg py-1 z-20">
+                <button type="button" onclick="selectArchiveVertical('all', 'All Verticals', '#a8a29e')"
+                    role="option" aria-selected="false" tabindex="-1"
+                    class="archive-vertical-option w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-left hover:bg-stone-50 focus:bg-stone-50 focus:outline-none transition-colors" data-value="all">
+                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background: #a8a29e;"></span>
+                    <span class="text-stone-700">All Verticals</span>
+                    <svg class="w-4 h-4 text-blue-700 ml-auto hidden check-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+                <button type="button" onclick="selectArchiveVertical('Aerospace', 'Aerospace', '#2563eb')"
+                    role="option" aria-selected="false" tabindex="-1"
+                    class="archive-vertical-option w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-left hover:bg-stone-50 focus:bg-stone-50 focus:outline-none transition-colors" data-value="Aerospace">
+                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background: #2563eb;"></span>
+                    <span class="text-stone-700">Aerospace</span>
+                    <svg class="w-4 h-4 text-blue-700 ml-auto hidden check-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+                <button type="button" onclick="selectArchiveVertical('Automotive', 'Automotive', '#0e7490')"
+                    role="option" aria-selected="false" tabindex="-1"
+                    class="archive-vertical-option w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-left hover:bg-stone-50 focus:bg-stone-50 focus:outline-none transition-colors" data-value="Automotive">
+                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background: #0e7490;"></span>
+                    <span class="text-stone-700">Automotive</span>
+                    <svg class="w-4 h-4 text-blue-700 ml-auto hidden check-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+                <button type="button" onclick="selectArchiveVertical('Robotics', 'Robotics', '#ea580c')"
+                    role="option" aria-selected="false" tabindex="-1"
+                    class="archive-vertical-option w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-left hover:bg-stone-50 focus:bg-stone-50 focus:outline-none transition-colors" data-value="Robotics">
+                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background: #ea580c;"></span>
+                    <span class="text-stone-700">Robotics</span>
+                    <svg class="w-4 h-4 text-blue-700 ml-auto hidden check-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+                <button type="button" onclick="selectArchiveVertical('AI/Electronics', 'AI / Electronics', '#0d9488')"
+                    role="option" aria-selected="false" tabindex="-1"
+                    class="archive-vertical-option w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-left hover:bg-stone-50 focus:bg-stone-50 focus:outline-none transition-colors" data-value="AI/Electronics">
+                    <span class="w-2 h-2 rounded-full flex-shrink-0" style="background: #0d9488;"></span>
+                    <span class="text-stone-700">AI / Electronics</span>
+                    <svg class="w-4 h-4 text-blue-700 ml-auto hidden check-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Timeframe Dropdown -->
+        <div class="flex-1 min-w-[150px] relative" id="archiveTimeframeContainer">
+            <label class="block text-xs text-stone-400 uppercase tracking-wide mb-1.5">Timeframe</label>
+            <button type="button" id="archiveTimeframeBtn" onclick="toggleArchiveTimeframe()"
+                aria-haspopup="listbox" aria-expanded="false" aria-label="Filter by timeframe"
+                class="w-full flex items-center justify-between gap-2 bg-white border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm text-stone-700 hover:border-stone-300 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700 transition-colors text-left">
+                <span id="archiveTimeframeLabel">{{ 'Last Month' if current_timeframe == '1month' else 'Last 3 Months' }}</span>
+                <svg class="w-4 h-4 text-stone-400 flex-shrink-0 transition-transform" id="archiveTimeframeChevron" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+            <div id="archiveTimeframePanel" role="listbox" class="hidden absolute left-0 top-full mt-1.5 w-full bg-white border border-stone-200 rounded-lg shadow-lg py-1 z-20">
+                <button type="button" onclick="selectArchiveTimeframe('1month', 'Last Month')"
+                    role="option" aria-selected="false" tabindex="-1"
+                    class="archive-timeframe-option w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-left hover:bg-stone-50 focus:bg-stone-50 focus:outline-none transition-colors" data-value="1month">
+                    <span class="text-stone-700">Last Month</span>
+                    <svg class="w-4 h-4 text-blue-700 ml-auto hidden check-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+                <button type="button" onclick="selectArchiveTimeframe('3months', 'Last 3 Months')"
+                    role="option" aria-selected="false" tabindex="-1"
+                    class="archive-timeframe-option w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-left hover:bg-stone-50 focus:bg-stone-50 focus:outline-none transition-colors" data-value="3months">
+                    <span class="text-stone-700">Last 3 Months</span>
+                    <svg class="w-4 h-4 text-blue-700 ml-auto hidden check-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var currentVertical = '{{ current_vertical }}';
+        var currentTimeframe = '{{ current_timeframe }}';
+
+        function toggleArchiveVertical() {
+            var panel = document.getElementById('archiveVerticalPanel');
+            var chevron = document.getElementById('archiveVerticalChevron');
+            var btn = document.getElementById('archiveVerticalBtn');
+            NyriomDropdown.toggle(panel, chevron, btn);
+        }
+
+        function toggleArchiveTimeframe() {
+            var panel = document.getElementById('archiveTimeframePanel');
+            var chevron = document.getElementById('archiveTimeframeChevron');
+            var btn = document.getElementById('archiveTimeframeBtn');
+            NyriomDropdown.toggle(panel, chevron, btn);
+        }
+
+        function selectArchiveVertical(value, label, color) {
+            currentVertical = value;
+            document.getElementById('archiveVerticalLabel').textContent = label;
+            document.getElementById('archiveVerticalDot').style.background = color;
+            var panel = document.getElementById('archiveVerticalPanel');
+            var chevron = document.getElementById('archiveVerticalChevron');
+            var btn = document.getElementById('archiveVerticalBtn');
+            NyriomDropdown.close(panel, chevron, btn);
+            document.querySelectorAll('.archive-vertical-option .check-icon').forEach(function(el) { el.classList.add('hidden'); });
+            document.querySelectorAll('.archive-vertical-option').forEach(function(el) { el.setAttribute('aria-selected', 'false'); });
+            var activeEl = document.querySelector('.archive-vertical-option[data-value="' + value + '"]');
+            if (activeEl) {
+                activeEl.querySelector('.check-icon').classList.remove('hidden');
+                activeEl.setAttribute('aria-selected', 'true');
+            }
+            updateArchiveFilters();
+        }
+
+        function selectArchiveTimeframe(value, label) {
+            currentTimeframe = value;
+            document.getElementById('archiveTimeframeLabel').textContent = label;
+            var panel = document.getElementById('archiveTimeframePanel');
+            var chevron = document.getElementById('archiveTimeframeChevron');
+            var btn = document.getElementById('archiveTimeframeBtn');
+            NyriomDropdown.close(panel, chevron, btn);
+            document.querySelectorAll('.archive-timeframe-option .check-icon').forEach(function(el) { el.classList.add('hidden'); });
+            document.querySelectorAll('.archive-timeframe-option').forEach(function(el) { el.setAttribute('aria-selected', 'false'); });
+            var activeEl = document.querySelector('.archive-timeframe-option[data-value="' + value + '"]');
+            if (activeEl) {
+                activeEl.querySelector('.check-icon').classList.remove('hidden');
+                activeEl.setAttribute('aria-selected', 'true');
+            }
+            updateArchiveFilters();
+        }
+
+        function updateArchiveFilters() {
+            window.location.href = '/archive?vertical=' + currentVertical + '&timeframe=' + currentTimeframe;
+        }
+
+        NyriomDropdown.init('archiveVerticalContainer', {
+            panelId: 'archiveVerticalPanel',
+            btnId: 'archiveVerticalBtn',
+            chevronId: 'archiveVerticalChevron'
+        });
+
+        NyriomDropdown.init('archiveTimeframeContainer', {
+            panelId: 'archiveTimeframePanel',
+            btnId: 'archiveTimeframeBtn',
+            chevronId: 'archiveTimeframeChevron'
+        });
+
+        // Mark active options on load
+        document.addEventListener('DOMContentLoaded', function() {
+            var activeVertical = document.querySelector('.archive-vertical-option[data-value="' + currentVertical + '"]');
+            if (activeVertical) {
+                activeVertical.querySelector('.check-icon').classList.remove('hidden');
+                activeVertical.setAttribute('aria-selected', 'true');
+            }
+            var activeTimeframe = document.querySelector('.archive-timeframe-option[data-value="' + currentTimeframe + '"]');
+            if (activeTimeframe) {
+                activeTimeframe.querySelector('.check-icon').classList.remove('hidden');
+                activeTimeframe.setAttribute('aria-selected', 'true');
+            }
+        });
+    </script>
+
+    {% if reports %}
+    <div class="text-stone-400 text-sm mb-4">
+        showing {{ reports|length }} report{{ 's' if reports|length != 1 else '' }}
+    </div>
+
+    <div class="space-y-4">
+        {% for report in reports %}
+        {% set v = report.vertical|replace('_', '-')|replace('/', '-') %}
+        <div class="bg-white border border-stone-200 rounded-lg p-4 sm:p-6 border-l-4"
+             style="border-left-color: {{ '#2563eb' if 'aerospace' in v else ('#0e7490' if 'automotive' in v else ('#ea580c' if 'robotics' in v else '#0d9488')) }};">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-stone-400 text-xs">{{ report.created_at[:10] }}</span>
+                        <span class="text-xs rounded-full px-2 py-0.5"
+                            style="background: {{ '#eff6ff' if 'aerospace' in v else ('#ecfeff' if 'automotive' in v else ('#fff7ed' if 'robotics' in v else '#f0fdfa')) }};
+                                   color: {{ '#2563eb' if 'aerospace' in v else ('#0e7490' if 'automotive' in v else ('#ea580c' if 'robotics' in v else '#0d9488')) }};">
+                            {{ report.vertical|replace('_', ' ')|title }}
+                        </span>
+                    </div>
+                    {% if report.report_html %}
+                    <p class="text-stone-600 text-sm line-clamp-2">{{ report.report_html|striptags|truncate(200) }}</p>
+                    {% endif %}
+                </div>
+                <div class="flex-shrink-0 flex gap-3">
+                    {% if report.report_html %}
+                    <a href="/report/{{ report.id }}" class="text-blue-700 text-sm font-medium hover:underline whitespace-nowrap">
+                        View Report
+                    </a>
+                    {% else %}
+                    <span class="text-stone-300 text-xs italic whitespace-nowrap">No report</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-12 text-stone-400 bg-white border border-dashed border-stone-300 rounded-lg">
+        <p>No reports found for this filter combination.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

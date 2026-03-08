@@ -1,0 +1,37 @@
+name,industry,start_date,end_date,location,country,website,description
+Paris Air Show,Aerospace,2025-06-16,2025-06-22,Le Bourget,France,https://www.siae.fr,World's largest aerospace trade show featuring aircraft debuts and defense contracts
+Space Tech Expo,Aerospace,2025-05-20,2025-05-22,Long Beach CA,USA,https://www.spacetechexpo.com,Supply chain event for spacecraft and satellite manufacturing
+AEROMART Toulouse,Aerospace,2025-12-02,2025-12-04,Toulouse,France,https://www.aeromart-toulouse.com,International business convention for aerospace supply chain
+Aircraft Interiors Expo,Aerospace,2026-04-14,2026-04-16,Hamburg,Germany,https://www.aircraftinteriorsexpo.com,Global showcase for aircraft cabin innovation and materials
+Farnborough International Airshow,Aerospace,2026-07-20,2026-07-24,Farnborough,UK,https://www.farnboroughairshow.com,Major biennial aerospace trade event with defence and space
+SAMPE Europe,Aerospace,2025-10-14,2025-10-16,Nantes,France,https://www.sampe-europe.org,Advanced materials and process engineering conference
+JEC World,Aerospace,2026-03-03,2026-03-05,Paris,France,https://www.jeccomposites.com,World's largest composites show covering aerospace automotive and more
+CES,Automotive,2026-01-06,2026-01-09,Las Vegas NV,USA,https://www.ces.tech,Consumer electronics show with major automotive and EV exhibits
+The Battery Show Europe,Automotive,2025-06-03,2025-06-05,Stuttgart,Germany,https://www.thebatteryshow.eu,Europe's largest battery and EV technology exhibition
+Automotive World,Automotive,2026-01-22,2026-01-24,Tokyo,Japan,https://www.automotiveworld.jp,Leading automotive technology exhibition in Asia
+IAA Mobility,Automotive,2025-09-09,2025-09-14,Munich,Germany,https://www.iaa-mobility.com,International motor show with focus on EV and autonomous driving
+EVS37,Automotive,2025-04-27,2025-04-30,Seoul,South Korea,https://evs37.org,International Electric Vehicle Symposium and Exhibition
+Advanced Automotive Battery Conference,Automotive,2025-06-16,2025-06-19,Mainz,Germany,https://www.advancedautobat.com,Leading conference on automotive battery technology and EV materials
+Composites Europe,Automotive,2025-10-21,2025-10-23,Stuttgart,Germany,https://www.composites-europe.com,Trade fair for composite materials and lightweight construction
+Automate,Robotics,2025-05-12,2025-05-15,Detroit MI,USA,https://www.automateshow.com,North America's largest automation and robotics trade show
+IREX,Robotics,2025-10-15,2025-10-18,Tokyo,Japan,https://irex.nikkan.co.jp,International Robot Exhibition in Tokyo
+RoboBusiness,Robotics,2025-10-15,2025-10-16,Santa Clara CA,USA,https://www.robobusiness.com,Business-focused robotics conference and expo
+ICRA 2026,Robotics,2026-05-19,2026-05-23,Atlanta GA,USA,https://www.ieee-ras.org,IEEE International Conference on Robotics and Automation
+Automatica,Robotics,2025-06-24,2025-06-27,Munich,Germany,https://automatica-munich.com,Leading exhibition for smart automation and robotics
+European Robotics Forum,Robotics,2026-03-17,2026-03-19,Malaga,Spain,https://eu-robotics.net/erf,Annual meeting of European robotics community
+Robot World,Robotics,2025-10-15,2025-10-18,Seoul,South Korea,https://www.robotworld.or.kr,International robot exhibition featuring industrial and service robots
+Computex,AI/Electronics,2025-05-20,2025-05-23,Taipei,Taiwan,https://www.computextaipei.com.tw,Asia's largest ICT and semiconductor trade show
+Embedded World,AI/Electronics,2026-03-10,2026-03-12,Nuremberg,Germany,https://www.embedded-world.de,Leading trade fair for embedded systems and IoT
+Hot Chips,AI/Electronics,2025-08-24,2025-08-26,Stanford CA,USA,https://www.hotchips.org,Symposium on high-performance chips and computing architectures
+Semicon West,AI/Electronics,2025-07-08,2025-07-10,San Francisco CA,USA,https://www.semiconwest.org,Premier semiconductor manufacturing exposition
+electronica,AI/Electronics,2026-11-10,2026-11-13,Munich,Germany,https://electronica.de,World's leading trade fair for electronic components
+PCIM Europe,AI/Electronics,2025-05-06,2025-05-08,Nuremberg,Germany,https://pcim.mesago.com,International exhibition for power electronics and energy management
+Sensors Expo,AI/Electronics,2025-06-24,2025-06-26,San Jose CA,USA,https://www.sensorsexpo.com,Leading event for sensor technologies and IoT solutions
+European Coatings Show,Aerospace,2025-03-25,2025-03-27,Nuremberg,Germany,https://www.european-coatings-show.com,International trade fair for coatings and surface technologies
+K Trade Fair,Automotive,2025-10-08,2025-10-15,Dusseldorf,Germany,https://www.k-online.com,World's largest plastics and rubber trade fair
+Advanced Engineering,Aerospace,2025-10-29,2025-10-30,Birmingham,UK,https://www.advancedengineeringuk.com,UK's largest annual gathering of engineering professionals
+CHINAPLAS,Automotive,2025-04-15,2025-04-18,Shenzhen,China,https://www.chinaplasonline.com,Asia's leading plastics and rubber trade fair
+Automotive Testing Expo Europe,Automotive,2026-06-16,2026-06-18,Stuttgart,Germany,https://www.testing-expo.com/europe,Europe's leading automotive testing and development technology exhibition
+The Battery Show Europe 2026,Automotive,2026-06-23,2026-06-25,Stuttgart,Germany,https://www.thebatteryshow.eu,Europe's largest battery and EV technology exhibition
+Automechanika Frankfurt,Automotive,2026-09-08,2026-09-12,Frankfurt,Germany,https://automechanika.messefrankfurt.com,World's leading trade fair for automotive aftermarket
+IAA Transportation,Automotive,2026-09-22,2026-09-27,Hanover,Germany,https://www.iaa-transportation.com,International commercial vehicle and transportation show

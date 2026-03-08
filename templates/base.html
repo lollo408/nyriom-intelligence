@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Nyriom Intelligence</title>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Georgia', 'Times New Roman', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        industry: {
+                            aerospace: '#2563eb',
+                            automotive: '#0e7490',
+                            robotics: '#ea580c',
+                            ai: '#0d9488',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#fafaf9">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Nyriom Intelligence">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+    <meta name="description" content="Market Intelligence Dashboard for Nyriom Technologies">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+<body class="bg-stone-50 text-stone-900 font-sans antialiased">
+
+    <!-- Main Navigation -->
+    <nav class="bg-white border-b border-stone-200 sticky top-0 z-50 print:hidden">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+            <a href="/" class="font-serif text-lg font-bold text-stone-900 tracking-tight">
+                Nyriom Intel
+            </a>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center gap-6">
+                <a href="/dashboard" class="{{ 'text-blue-700 font-medium' if request.path == '/dashboard' else 'text-stone-500 hover:text-stone-900' }} text-sm transition-colors">Dashboard</a>
+                <a href="/events" class="{{ 'text-blue-700 font-medium' if '/events' in request.path else 'text-stone-500 hover:text-stone-900' }} text-sm transition-colors">Events</a>
+                <a href="/archive" class="{{ 'text-blue-700 font-medium' if request.path == '/archive' else 'text-stone-500 hover:text-stone-900' }} text-sm transition-colors">Archive</a>
+                {% if current_user %}
+                    <div class="relative">
+                        <button class="flex items-center gap-1.5 text-sm text-stone-500 hover:text-stone-900 transition-colors" onclick="toggleUserMenu()">
+                            {{ current_user.name.split(' ')[0] }}
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <div class="hidden absolute right-0 top-full mt-2 w-48 bg-white border border-stone-200 rounded-lg py-2 shadow-sm" id="userMenu">
+                            <div class="px-3 py-2 border-b border-stone-100">
+                                <div class="text-sm font-medium text-stone-900">{{ current_user.name }}</div>
+                                <div class="text-xs text-stone-400">{{ current_user.email }}</div>
+                                {% if user_type == 'demo' %}
+                                <span class="inline-block mt-1 text-xs bg-blue-50 text-blue-700 rounded-full px-2 py-0.5">Demo</span>
+                                {% elif user_type == 'guest' %}
+                                <span class="inline-block mt-1 text-xs bg-stone-100 text-stone-500 rounded-full px-2 py-0.5">Guest</span>
+                                {% endif %}
+                            </div>
+                            <a href="/logout" class="block px-3 py-2 text-sm text-stone-500 hover:text-stone-900 hover:bg-stone-50 transition-colors">Sign Out</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="/login" class="text-sm text-stone-500 hover:text-stone-900 transition-colors">Sign In</a>
+                {% endif %}
+            </div>
+
+            <!-- Hamburger Button (Mobile) -->
+            <button class="md:hidden flex flex-col gap-1.5 p-2" onclick="toggleMobileMenu()" aria-label="Toggle menu" id="hamburgerBtn">
+                <span class="block w-5 h-0.5 bg-stone-600 transition-all hamburger-line"></span>
+                <span class="block w-5 h-0.5 bg-stone-600 transition-all hamburger-line"></span>
+                <span class="block w-5 h-0.5 bg-stone-600 transition-all hamburger-line"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="fixed inset-0 bg-white z-40 transform translate-x-full transition-transform duration-300 ease-in-out md:hidden print:hidden" id="mobileMenu">
+        <div class="flex justify-end p-4">
+            <button onclick="toggleMobileMenu()" aria-label="Close menu" class="p-2 text-stone-400 hover:text-stone-900">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        {% if current_user %}
+            <div class="px-6 pb-4 border-b border-stone-100">
+                <div class="text-sm font-medium text-stone-900">{{ current_user.name }}</div>
+                <div class="text-xs text-stone-400">{{ current_user.email }}</div>
+            </div>
+        {% endif %}
+        <div class="flex flex-col px-6 py-4 gap-1">
+            <a href="/" onclick="toggleMobileMenu()" class="py-3 text-stone-600 hover:text-stone-900 text-base">Home</a>
+            <a href="/dashboard" onclick="toggleMobileMenu()" class="py-3 text-stone-600 hover:text-stone-900 text-base">Dashboard</a>
+            <a href="/events" onclick="toggleMobileMenu()" class="py-3 text-stone-600 hover:text-stone-900 text-base">Events</a>
+            <a href="/archive" onclick="toggleMobileMenu()" class="py-3 text-stone-600 hover:text-stone-900 text-base">Archive</a>
+            {% if current_user %}
+                <a href="/logout" onclick="toggleMobileMenu()" class="py-3 text-red-500 hover:text-red-700 text-base mt-4 border-t border-stone-100 pt-4">Sign Out</a>
+            {% else %}
+                <a href="/login" onclick="toggleMobileMenu()" class="py-3 text-blue-700 hover:text-blue-800 text-base mt-4 border-t border-stone-100 pt-4">Sign In</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- PWA Install Prompt (Mobile Only) -->
+    <div id="installBanner" class="fixed top-14 left-0 right-0 bg-white border-b border-stone-200 p-4 z-30 md:hidden print:hidden" style="display: none;">
+        <div class="flex items-center justify-between gap-3 max-w-5xl mx-auto" id="installBannerContent">
+            <div>
+                <div class="text-sm font-medium text-stone-900">Install Nyriom Intelligence</div>
+                <div class="text-xs text-stone-400" id="installSubtext">Quick access from your home screen</div>
+            </div>
+            <div class="flex gap-2 items-center">
+                <button id="installButton" class="px-3 py-1.5 bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors">Install</button>
+                <button id="dismissButton" class="text-stone-400 hover:text-stone-600 text-lg leading-none">&times;</button>
+            </div>
+        </div>
+        <!-- iOS Instructions -->
+        <div id="iosInstructions" class="mt-3" style="display: none;">
+            <div class="flex items-center gap-3 py-2 border-b border-stone-100">
+                <span class="w-6 h-6 bg-stone-100 rounded-full flex items-center justify-center text-xs font-semibold text-stone-600">1</span>
+                <span class="text-sm text-stone-600">Tap the <strong>Share</strong> button</span>
+            </div>
+            <div class="flex items-center gap-3 py-2 border-b border-stone-100">
+                <span class="w-6 h-6 bg-stone-100 rounded-full flex items-center justify-center text-xs font-semibold text-stone-600">2</span>
+                <span class="text-sm text-stone-600">Scroll down and tap <strong>Add to Home Screen</strong></span>
+            </div>
+            <div class="flex items-center gap-3 py-2">
+                <span class="w-6 h-6 bg-stone-100 rounded-full flex items-center justify-center text-xs font-semibold text-stone-600">3</span>
+                <span class="text-sm text-stone-600">Tap <strong>Add</strong> in the top right</span>
+            </div>
+            <button id="iosGotIt" class="w-full mt-3 py-2 bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors">Got it</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Bottom Navigation (Mobile Only) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 z-30 md:hidden print:hidden">
+        <div class="flex justify-around items-center h-14">
+            <a href="/" class="flex flex-col items-center gap-0.5 {{ 'text-blue-700' if request.path == '/' else 'text-stone-400' }}">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="text-[11px]">Home</span>
+            </a>
+            <a href="/dashboard" class="flex flex-col items-center gap-0.5 {{ 'text-blue-700' if request.path == '/dashboard' else 'text-stone-400' }}">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="text-[11px]">Intel</span>
+            </a>
+            <a href="/events" class="flex flex-col items-center gap-0.5 {{ 'text-blue-700' if '/events' in request.path else 'text-stone-400' }}">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="text-[11px]">Events</span>
+            </a>
+            <a href="/archive" class="flex flex-col items-center gap-0.5 {{ 'text-blue-700' if request.path == '/archive' else 'text-stone-400' }}">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="text-[11px]">Archive</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- JavaScript for Mobile Menu -->
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const isOpen = !menu.classList.contains('translate-x-full');
+            if (isOpen) {
+                menu.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            } else {
+                menu.classList.remove('translate-x-full');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const menu = document.getElementById('mobileMenu');
+                if (!menu.classList.contains('translate-x-full')) {
+                    toggleMobileMenu();
+                }
+                const userMenu = document.getElementById('userMenu');
+                if (userMenu) userMenu.classList.add('hidden');
+            }
+        });
+
+        function toggleUserMenu() {
+            const menu = document.getElementById('userMenu');
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', function(e) {
+            const userMenu = document.getElementById('userMenu');
+            if (userMenu && !e.target.closest('.relative')) {
+                userMenu.classList.add('hidden');
+            }
+        });
+    </script>
+
+    <!-- Shared Dropdown Utility -->
+    <script>
+        window.NyriomDropdown = {
+            init: function(containerId, opts) {
+                var container = document.getElementById(containerId);
+                var panel = document.getElementById(opts.panelId);
+                var btn = document.getElementById(opts.btnId);
+                var chevron = opts.chevronId ? document.getElementById(opts.chevronId) : null;
+                var self = this;
+
+                btn.setAttribute('aria-haspopup', 'listbox');
+                btn.setAttribute('aria-expanded', 'false');
+
+                btn.addEventListener('keydown', function(e) {
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        self.open(panel, chevron, btn);
+                        self.focusOption(panel, 0);
+                    }
+                });
+
+                panel.addEventListener('keydown', function(e) {
+                    var options = panel.querySelectorAll('[role="option"]');
+                    var focused = panel.querySelector('[role="option"]:focus');
+                    var idx = Array.prototype.indexOf.call(options, focused);
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        self.focusOption(panel, Math.min(idx + 1, options.length - 1));
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (idx <= 0) {
+                            self.close(panel, chevron, btn);
+                            btn.focus();
+                        } else {
+                            self.focusOption(panel, idx - 1);
+                        }
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (focused) focused.click();
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        self.close(panel, chevron, btn);
+                        btn.focus();
+                    }
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (container && !container.contains(e.target)) {
+                        self.close(panel, chevron, btn);
+                    }
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && !panel.classList.contains('hidden')) {
+                        self.close(panel, chevron, btn);
+                        btn.focus();
+                    }
+                });
+            },
+            toggle: function(panel, chevron, btn) {
+                if (panel.classList.contains('hidden')) {
+                    this.open(panel, chevron, btn);
+                } else {
+                    this.close(panel, chevron, btn);
+                }
+            },
+            open: function(panel, chevron, btn) {
+                panel.classList.remove('hidden');
+                if (chevron) chevron.style.transform = 'rotate(180deg)';
+                if (btn) btn.setAttribute('aria-expanded', 'true');
+            },
+            close: function(panel, chevron, btn) {
+                panel.classList.add('hidden');
+                if (chevron) chevron.style.transform = '';
+                if (btn) btn.setAttribute('aria-expanded', 'false');
+            },
+            focusOption: function(panel, index) {
+                var options = panel.querySelectorAll('[role="option"]');
+                if (options[index]) options[index].focus();
+            }
+        };
+    </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('[PWA] Service Worker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('[PWA] Service Worker registration failed:', error);
+                    });
+            });
+
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'NAVIGATE') {
+                    window.location.href = event.data.url;
+                }
+            });
+        }
+    </script>
+
+    <!-- PWA Install Prompt Handler -->
+    <script>
+        (function() {
+            let deferredPrompt = null;
+            const installBanner = document.getElementById('installBanner');
+            const installButton = document.getElementById('installButton');
+            const dismissButton = document.getElementById('dismissButton');
+            const installSubtext = document.getElementById('installSubtext');
+            const iosInstructions = document.getElementById('iosInstructions');
+            const iosGotIt = document.getElementById('iosGotIt');
+            const installBannerContent = document.getElementById('installBannerContent');
+
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isInstalled = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            const dismissed = localStorage.getItem('pwa-install-dismissed');
+            const isMobile = window.innerWidth < 768;
+
+            if (isIOS && !isInstalled && !dismissed && isMobile) {
+                installSubtext.textContent = 'Add to your home screen for quick access';
+                installButton.textContent = 'How to Install';
+                installBanner.style.display = 'block';
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                if (isMobile && !dismissed && !isInstalled) {
+                    installButton.textContent = 'Install';
+                    installSubtext.textContent = 'Quick access from your home screen';
+                    installBanner.style.display = 'block';
+                }
+            });
+
+            installButton.addEventListener('click', async () => {
+                if (isIOS) {
+                    installBannerContent.style.display = 'none';
+                    iosInstructions.style.display = 'block';
+                    return;
+                }
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    deferredPrompt = null;
+                    installBanner.style.display = 'none';
+                }
+            });
+
+            if (iosGotIt) {
+                iosGotIt.addEventListener('click', () => {
+                    installBanner.style.display = 'none';
+                    localStorage.setItem('pwa-install-dismissed', 'true');
+                });
+            }
+
+            dismissButton.addEventListener('click', () => {
+                installBanner.style.display = 'none';
+                localStorage.setItem('pwa-install-dismissed', 'true');
+            });
+
+            window.addEventListener('appinstalled', () => {
+                installBanner.style.display = 'none';
+                deferredPrompt = null;
+            });
+        })();
+    </script>
+
+    <!-- Silent Auto-Update Handler -->
+    <script>
+        (function() {
+            const VERSION_KEY = 'nyriom-app-version';
+            const UPDATE_IN_PROGRESS_KEY = 'nyriom-updating';
+
+            function isVersionLower(v1, v2) {
+                if (!v1 || !v2) return false;
+                const parts1 = v1.split('.').map(Number);
+                const parts2 = v2.split('.').map(Number);
+                for (let i = 0; i < 3; i++) {
+                    const p1 = parts1[i] || 0;
+                    const p2 = parts2[i] || 0;
+                    if (p1 < p2) return true;
+                    if (p1 > p2) return false;
+                }
+                return false;
+            }
+
+            async function performSilentUpdate(newVersion) {
+                if (sessionStorage.getItem(UPDATE_IN_PROGRESS_KEY)) {
+                    sessionStorage.removeItem(UPDATE_IN_PROGRESS_KEY);
+                    localStorage.setItem(VERSION_KEY, newVersion);
+                    return;
+                }
+                sessionStorage.setItem(UPDATE_IN_PROGRESS_KEY, 'true');
+                try {
+                    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.controller.postMessage({ type: 'FORCE_UPDATE' });
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    }
+                    localStorage.setItem(VERSION_KEY, newVersion);
+                    window.location.reload();
+                } catch (error) {
+                    sessionStorage.removeItem(UPDATE_IN_PROGRESS_KEY);
+                    localStorage.setItem(VERSION_KEY, newVersion);
+                }
+            }
+
+            async function checkVersion() {
+                try {
+                    const response = await fetch('/api/version', { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
+                    if (!response.ok) return;
+                    const serverVersion = await response.json();
+                    const localVersion = localStorage.getItem(VERSION_KEY);
+                    if (!localVersion) {
+                        localStorage.setItem(VERSION_KEY, serverVersion.version);
+                        return;
+                    }
+                    if (isVersionLower(localVersion, serverVersion.min_version)) {
+                        performSilentUpdate(serverVersion.version);
+                    } else if (isVersionLower(localVersion, serverVersion.version)) {
+                        localStorage.setItem(VERSION_KEY, serverVersion.version);
+                    }
+                } catch (error) {}
+            }
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.addEventListener('message', (event) => {
+                    if (event.data && event.data.type === 'CACHE_CLEARED') {}
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', checkVersion);
+            } else {
+                setTimeout(checkVersion, 500);
+            }
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    setTimeout(checkVersion, 1000);
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>

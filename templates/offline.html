@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}You're Offline - Nyriom Intelligence{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center min-h-[60vh] text-center px-4 py-12">
+    <div class="text-stone-300 text-5xl mb-6">
+        <svg class="w-16 h-16 mx-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M1 1l22 22M16.72 11.06A10.94 10.94 0 0119 12.55M5 12.55a10.94 10.94 0 015.17-2.39M10.71 5.05A16 16 0 0122.56 9M1.42 9a15.91 15.91 0 014.7-2.88M8.53 16.11a6 6 0 016.95 0M12 20h.01" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <h1 class="font-serif text-2xl text-stone-900 mb-2">You're Offline</h1>
+
+    <p class="text-stone-500 text-sm max-w-md mb-8">
+        It looks like you've lost your internet connection. Some pages may still be available from cache.
+    </p>
+
+    <button class="px-6 py-2.5 bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors mb-4" onclick="retryConnection()">
+        Retry Connection
+    </button>
+
+    <div id="connectionStatus" class="text-xs px-3 py-1.5 rounded-full bg-red-50 text-red-500 mb-8">
+        Status: Offline
+    </div>
+
+    <div class="w-full max-w-sm bg-white border border-stone-200 rounded-lg p-5">
+        <h3 class="text-sm font-medium text-stone-900 mb-3">Available Pages</h3>
+        <div class="space-y-2">
+            <a href="/" class="flex items-center gap-3 px-3 py-2.5 text-sm text-stone-600 border border-stone-200 rounded-lg hover:border-stone-300 hover:text-stone-900 transition-colors">
+                <svg class="w-4 h-4 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Home
+            </a>
+            <a href="/dashboard" class="flex items-center gap-3 px-3 py-2.5 text-sm text-stone-600 border border-stone-200 rounded-lg hover:border-stone-300 hover:text-stone-900 transition-colors">
+                <svg class="w-4 h-4 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Dashboard
+            </a>
+            <a href="/events" class="flex items-center gap-3 px-3 py-2.5 text-sm text-stone-600 border border-stone-200 rounded-lg hover:border-stone-300 hover:text-stone-900 transition-colors">
+                <svg class="w-4 h-4 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Events
+            </a>
+            <a href="/archive" class="flex items-center gap-3 px-3 py-2.5 text-sm text-stone-600 border border-stone-200 rounded-lg hover:border-stone-300 hover:text-stone-900 transition-colors">
+                <svg class="w-4 h-4 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Archive
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateConnectionStatus() {
+        const statusEl = document.getElementById('connectionStatus');
+        if (navigator.onLine) {
+            statusEl.textContent = 'Status: Online';
+            statusEl.className = 'text-xs px-3 py-1.5 rounded-full bg-green-50 text-green-700 mb-8';
+        } else {
+            statusEl.textContent = 'Status: Offline';
+            statusEl.className = 'text-xs px-3 py-1.5 rounded-full bg-red-50 text-red-500 mb-8';
+        }
+    }
+
+    function retryConnection() {
+        if (navigator.onLine) {
+            window.location.reload();
+        } else {
+            alert('Still offline. Please check your internet connection.');
+        }
+    }
+
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+    updateConnectionStatus();
+
+    window.addEventListener('online', () => {
+        setTimeout(() => { window.location.reload(); }, 1000);
+    });
+</script>
+{% endblock %}

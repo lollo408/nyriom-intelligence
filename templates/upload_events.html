@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-xl mx-auto px-4 sm:px-6 py-10 pb-24">
+    <!-- Back Link -->
+    <a href="/events" class="text-stone-400 text-sm hover:text-stone-900 transition-colors inline-flex items-center gap-1 mb-8">
+        &larr; back to events
+    </a>
+
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-serif text-2xl text-stone-900 mb-1">Upload Events</h1>
+        <p class="text-stone-500 text-sm">Import events from a CSV file</p>
+    </div>
+
+    <!-- Upload Card -->
+    <div class="bg-white border border-stone-200 rounded-lg p-6 mb-6">
+        {% if error %}
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 text-sm">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-5">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="relative border-2 border-dashed border-stone-300 rounded-lg p-8 text-center hover:border-blue-400 hover:bg-blue-50/50 transition-colors cursor-pointer" id="dropZone">
+                <input type="file" name="file" accept=".csv" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                <div class="pointer-events-none">
+                    <svg class="w-10 h-10 text-stone-300 mx-auto mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="12" y1="18" x2="12" y2="12"/>
+                        <line x1="9" y1="15" x2="15" y2="15"/>
+                    </svg>
+                    <p class="text-sm text-stone-500">Drop your CSV here or <span class="text-blue-700 font-medium">browse</span></p>
+                </div>
+                <div class="text-green-700 text-xs mt-2" id="fileName"></div>
+            </div>
+            <button type="submit" class="w-full py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition-colors text-sm">Upload & Import</button>
+        </form>
+    </div>
+
+    <!-- Format Reference -->
+    <div class="bg-white border border-stone-200 rounded-lg p-6">
+        <h3 class="text-sm font-semibold text-stone-900 mb-4">Expected CSV Format</h3>
+        <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="border-b border-stone-200">
+                    <th class="text-left py-2 text-xs text-stone-400 uppercase tracking-wide font-medium">Column</th>
+                    <th class="text-left py-2 text-xs text-stone-400 uppercase tracking-wide font-medium">Required</th>
+                    <th class="text-left py-2 text-xs text-stone-400 uppercase tracking-wide font-medium">Example</th>
+                </tr>
+            </thead>
+            <tbody class="text-stone-600">
+                <tr class="border-b border-stone-100 hover:bg-stone-50 transition-colors">
+                    <td class="py-2"><code class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-xs">name</code></td>
+                    <td class="py-2"><span class="text-xs text-red-500 bg-red-50 px-1.5 py-0.5 rounded">required</span></td>
+                    <td class="py-2 text-xs">CES 2025</td>
+                </tr>
+                <tr class="border-b border-stone-100 hover:bg-stone-50 transition-colors">
+                    <td class="py-2"><code class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-xs">start_date</code></td>
+                    <td class="py-2"><span class="text-xs text-red-500 bg-red-50 px-1.5 py-0.5 rounded">required</span></td>
+                    <td class="py-2 text-xs">2025-01-07</td>
+                </tr>
+                <tr class="border-b border-stone-100 hover:bg-stone-50 transition-colors">
+                    <td class="py-2"><code class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-xs">end_date</code></td>
+                    <td class="py-2"><span class="text-xs text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded">optional</span></td>
+                    <td class="py-2 text-xs">2025-01-10</td>
+                </tr>
+                <tr class="border-b border-stone-100 hover:bg-stone-50 transition-colors">
+                    <td class="py-2"><code class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-xs">industry</code></td>
+                    <td class="py-2"><span class="text-xs text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded">optional</span></td>
+                    <td class="py-2 text-xs">Automotive</td>
+                </tr>
+                <tr class="border-b border-stone-100 hover:bg-stone-50 transition-colors">
+                    <td class="py-2"><code class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-xs">location</code></td>
+                    <td class="py-2"><span class="text-xs text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded">optional</span></td>
+                    <td class="py-2 text-xs">Las Vegas, NV</td>
+                </tr>
+                <tr class="border-b border-stone-100 hover:bg-stone-50 transition-colors">
+                    <td class="py-2"><code class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-xs">country</code></td>
+                    <td class="py-2"><span class="text-xs text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded">optional</span></td>
+                    <td class="py-2 text-xs">USA</td>
+                </tr>
+                <tr class="border-b border-stone-100 hover:bg-stone-50 transition-colors">
+                    <td class="py-2"><code class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-xs">website</code></td>
+                    <td class="py-2"><span class="text-xs text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded">optional</span></td>
+                    <td class="py-2 text-xs">https://ces.tech</td>
+                </tr>
+                <tr class="hover:bg-stone-50 transition-colors">
+                    <td class="py-2"><code class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-xs">description</code></td>
+                    <td class="py-2"><span class="text-xs text-stone-400 bg-stone-100 px-1.5 py-0.5 rounded">optional</span></td>
+                    <td class="py-2 text-xs">Consumer electronics show</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    var fileName = e.target.files[0] ? e.target.files[0].name : '';
+    document.getElementById('fileName').textContent = fileName;
+});
+</script>
+{% endblock %}

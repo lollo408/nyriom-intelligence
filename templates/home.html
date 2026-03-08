@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6">
+    <!-- Hero -->
+    <section class="py-16 text-center">
+        <h1 class="font-serif text-2xl sm:text-4xl md:text-5xl text-stone-900 tracking-tight">Nyriom Intelligence</h1>
+        <p class="text-stone-500 text-lg mt-3 max-w-xl mx-auto">Market intelligence & event tracking across four industry verticals</p>
+    </section>
+
+    <!-- Navigation Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 pb-24">
+        <a href="/dashboard" class="group bg-white border border-stone-200 rounded-lg p-4 sm:p-6 hover:border-stone-300 transition-colors">
+            <div class="flex items-center gap-2 mb-3">
+                <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                <span class="text-xs uppercase tracking-wide text-stone-400">Intelligence</span>
+            </div>
+            <h3 class="font-serif text-xl text-stone-900">Dashboard</h3>
+            <p class="text-stone-500 text-sm mt-2">Weekly reports across Aerospace, Automotive, Robotics & AI/Electronics</p>
+            <span class="text-blue-700 text-sm font-medium mt-4 inline-block group-hover:translate-x-1 transition-transform">View dashboard &rarr;</span>
+        </a>
+
+        <a href="/events" class="group bg-white border border-stone-200 rounded-lg p-4 sm:p-6 hover:border-stone-300 transition-colors">
+            <div class="flex items-center gap-2 mb-3">
+                <span class="w-2 h-2 rounded-full bg-cyan-700"></span>
+                <span class="text-xs uppercase tracking-wide text-stone-400">Calendar</span>
+            </div>
+            <h3 class="font-serif text-xl text-stone-900">Events</h3>
+            <p class="text-stone-500 text-sm mt-2">Industry conferences & trade shows with AI-generated summaries</p>
+            <span class="text-blue-700 text-sm font-medium mt-4 inline-block group-hover:translate-x-1 transition-transform">Browse events &rarr;</span>
+        </a>
+
+        <a href="/archive" class="group bg-white border border-stone-200 rounded-lg p-4 sm:p-6 hover:border-stone-300 transition-colors">
+            <div class="flex items-center gap-2 mb-3">
+                <span class="w-2 h-2 rounded-full bg-orange-600"></span>
+                <span class="text-xs uppercase tracking-wide text-stone-400">Reports</span>
+            </div>
+            <h3 class="font-serif text-xl text-stone-900">Archive</h3>
+            <p class="text-stone-500 text-sm mt-2">Historical intelligence reports with downloadable PDFs</p>
+            <span class="text-blue-700 text-sm font-medium mt-4 inline-block group-hover:translate-x-1 transition-transform">Search archive &rarr;</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

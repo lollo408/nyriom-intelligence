@@ -1,0 +1,44 @@
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Environment variables & secrets
+.env
+.env.local
+.env.production
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (if any tooling)
+node_modules/
+
+# Vercel
+.vercel/
+
+# Logs
+*.log
+
+# Claude Code local config
+.claude/
+
+# Playwright MCP
+.playwright-mcp/
+
+# Internal company docs (not for public repo)
+nyriom-company-bible.md
