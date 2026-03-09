@@ -84,7 +84,7 @@ nyriom-intel-hub/
 ## Local Development
 
 ```bash
-git clone https://github.com/lollo408/nyriom-intel-hub.git
+git clone https://github.com/lorenzo-leprotti/nyriom-intelligence.git
 cd nyriom-intel-hub
 python3 -m venv venv
 source venv/bin/activate
@@ -128,8 +128,8 @@ See `.env.example` for the full list. Required:
 
 | Project | Description |
 |---------|-------------|
-| [Nyriom List](https://github.com/lollo408/nyriom-list) | AI-powered conference delegate prioritization pipeline |
-| [Nyriom Dashboard](https://github.com/lollo408/nyriom-dashboard) | Sustainability impact simulator (React/TypeScript) |
+| [Nyriom List](https://github.com/lorenzo-leprotti/nyriom-list) | AI-powered conference delegate prioritization pipeline |
+| [Nyriom Dashboard](https://github.com/lorenzo-leprotti/nyriom-dashboard) | Sustainability impact simulator (React/TypeScript) |
 
 ## Disclosure
 
