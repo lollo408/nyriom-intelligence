@@ -3,7 +3,7 @@
  * Handles caching strategies, offline functionality, and forced updates
  */
 
-const CACHE_VERSION = 'nyriom-intel-v5';
+const CACHE_VERSION = 'nyriom-intel-v6';
 const OFFLINE_URL = '/offline';
 
 const PRECACHE_ASSETS = [
