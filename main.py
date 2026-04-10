@@ -270,8 +270,6 @@ def get_latest_report(vertical_name):
 def get_all_events(filter_type='upcoming', industry=None):
     """Fetches events with optional filtering."""
     try:
-        from datetime import timedelta
-
         query = supabase.table('events').select("*")
 
         if industry and industry != 'all':
@@ -279,10 +277,7 @@ def get_all_events(filter_type='upcoming', industry=None):
 
         today = date.today()
 
-        if filter_type == '3months':
-            three_months_out = (today + timedelta(days=90)).isoformat()
-            query = query.gte('start_date', today.isoformat()).lte('start_date', three_months_out)
-        elif filter_type == 'upcoming':
+        if filter_type == 'upcoming':
             query = query.gte('start_date', today.isoformat())
         elif filter_type == 'past':
             query = query.lt('start_date', today.isoformat())
@@ -416,7 +411,7 @@ def view_report(report_id):
 @app.route('/events')
 def events():
     """Events listing page with filters and pagination."""
-    filter_type = request.args.get('filter', 'upcoming')
+    filter_type = request.args.get('filter', 'past')
 
     industry = request.args.get('industry', 'all')
     if industry == '':
@@ -432,7 +427,6 @@ def events():
     all_events = get_all_events(filter_type, industry)
     today = date.today()
 
-    upcoming_events = []
     for event in all_events:
         if not event:
             continue
@@ -446,16 +440,11 @@ def events():
             event['is_upcoming'] = 0 < days_until <= 14
             event['is_past'] = end_date < today
             event['is_this_week'] = 0 < days_until <= 7
-
-            if 0 < days_until <= 14:
-                upcoming_events.append(event)
         except Exception:
             event['days_until'] = None
             event['is_upcoming'] = False
             event['is_past'] = False
             event['is_this_week'] = False
-
-    upcoming_events.sort(key=lambda x: x.get('days_until', 999))
 
     total_events = len(all_events)
     total_pages = (total_events + per_page - 1) // per_page
@@ -463,7 +452,6 @@ def events():
 
     return render_template('events.html',
                            events=events_list,
-                           upcoming_events=upcoming_events,
                            current_filter=filter_type,
                            current_industry=industry,
                            current_page=page,

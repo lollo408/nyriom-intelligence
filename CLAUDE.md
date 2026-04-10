@@ -11,11 +11,11 @@
 - `templates/` — Jinja2 templates (base, home, login, index/dashboard, events, event_detail, archive, report_view, admin, upload_events, offline)
 - `templates/base.html` — Shared layout, bottom nav, Tailwind v4 play CDN (`cdn.tailwindcss.com`) with `@plugin "@tailwindcss/typography"` in a `<style type="text/tailwindcss">` block, CSRF meta tag, NyriomDropdown shared JS utility
 - `templates/index.html` — Dashboard with Jinja macro `vertical_section()` for vertical sections; custom dropdown selector with color dots; two-column layout (headlines sidebar + inline full report) on desktop, stacked on mobile
-- `templates/events.html` — Event listing with custom industry dropdown + time filter pills; pagination
+- `templates/events.html` — Event listing with custom industry dropdown + time filter pills (Upcoming/Past/All); defaults to Past; pagination
 - `templates/archive.html` — Historical report archive with custom dropdowns for vertical and timeframe filters
 - `templates/report_view.html` — Standalone printable report page (editorial layout with print styles)
 - `static/service-worker.js` — PWA caching (cache name: nyriom-intel-v6)
-- `data/sample_events.csv` — 36 industry events across 4 verticals
+- `data/sample_events.csv` — 34 industry events across 4 verticals (static demo: all past events have AI summaries)
 - `scripts/seed_data.py` — Wipes Supabase tables, seeds events from CSV
 - `scripts/generate_summaries.py` — Generates AI summaries for past events (bypasses Flask, calls Perplexity directly)
 - `scripts/generate_intelligence_reports.py` — Generates intelligence reports for all 4 verticals (current + backdated)
@@ -26,6 +26,7 @@
 ## Shared Frontend Components
 
 - **NyriomDropdown** — Reusable dropdown utility in `base.html`. Provides `toggle()`, `close()`, and `init()` methods. Used by dashboard vertical selector, events industry filter, and archive filters. Handles outside-click dismissal and Escape key.
+- **`.report-content` CSS** — Custom styles for AI-generated HTML (h3 headings, lists, links, etc.). Used in `index.html` (dashboard) and `event_detail.html`. Do NOT rely on Tailwind `prose` classes — the typography plugin doesn't work with the v4 play CDN.
 
 ## Verticals
 
@@ -41,7 +42,7 @@ Aerospace, Automotive, Robotics, AI/Electronics
 
 - `/` — Home page
 - `/dashboard` — Intelligence dashboard (4 verticals, custom dropdown selector, two-column editorial layout: sticky headlines sidebar + full report)
-- `/events` — Event listing with filters (upcoming/past/3months + industry dropdown)
+- `/events` — Event listing with filters (upcoming/past/all + industry dropdown, defaults to past)
 - `/events/<id>` — Event detail + AI summary
 - `/report/<id>` — Printable intelligence report view
 - `/archive` — Historical report archive with vertical + timeframe filters

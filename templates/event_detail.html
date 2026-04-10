@@ -71,11 +71,7 @@
             <h2 class="font-serif text-lg text-stone-900">Event Summary</h2>
             <span class="bg-blue-50 text-blue-700 text-xs rounded-full px-2 py-0.5 font-medium">AI-generated</span>
         </div>
-        <div class="text-stone-700 text-sm leading-relaxed prose prose-sm prose-stone max-w-none
-                    prose-headings:font-serif prose-headings:text-stone-900
-                    prose-a:text-blue-700 prose-a:no-underline hover:prose-a:underline
-                    prose-strong:text-stone-900
-                    prose-hr:border-stone-200">
+        <div class="report-content">
             {{ summary.summary_text | safe }}
         </div>
         <div class="text-stone-400 text-xs mt-5 pt-4 border-t border-stone-100">
@@ -88,8 +84,50 @@
             <h2 class="font-serif text-lg text-stone-900">Event Summary</h2>
             <span class="bg-blue-50 text-blue-700 text-xs rounded-full px-2 py-0.5 font-medium">AI-generated</span>
         </div>
-        <p class="text-stone-400 text-sm italic text-center py-6">Summary will be generated 7 days after the event ends.</p>
+        <p class="text-stone-400 text-sm italic text-center py-6">Summary not available for this event.</p>
     </div>
     {% endif %}
 </div>
+
+<style>
+.report-content h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1c1917;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid #1d4ed8;
+    line-height: 1.35;
+}
+.report-content h3:first-child { margin-top: 0; }
+.report-content p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: #44403c;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+}
+.report-content ul { margin: 0.75rem 0; padding-left: 0; list-style: none; }
+.report-content li {
+    font-size: 0.875rem;
+    color: #44403c;
+    line-height: 1.7;
+    margin-bottom: 0.6rem;
+    padding-left: 1.25rem;
+    position: relative;
+}
+.report-content li::before {
+    content: "\2022";
+    position: absolute;
+    left: 0.2rem;
+    color: #1d4ed8;
+}
+.report-content strong { color: #1c1917; font-weight: 600; }
+.report-content em { color: #78716c; font-style: italic; }
+.report-content a { color: #1d4ed8; text-decoration: none; border-bottom: 1px solid rgba(29, 78, 216, 0.3); }
+.report-content a:hover { border-bottom-color: #1d4ed8; }
+.report-content hr { border: none; border-top: 1px solid #d6d3d1; margin: 2rem 0; }
+</style>
 {% endblock %}
